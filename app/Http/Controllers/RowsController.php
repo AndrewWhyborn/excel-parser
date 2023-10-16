@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RowsPostRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class RowsController extends Controller
 {
-    public function parse(Request $request): JsonResponse
+    public function parse(RowsPostRequest $request): JsonResponse
     {
-        return response()->json(["working" => "yes"]);
+        $spreadsheet = IOFactory::load($request->file('file'));
+        $cell = $spreadsheet->getActiveSheet()->getCell('B2');
+
+        return response()->json(["working" => $cell->getValue()]);
     }
 }
