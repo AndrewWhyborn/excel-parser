@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RowsPostRequest;
+use App\Services\RowsServices;
 use Illuminate\Http\JsonResponse;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class RowsController extends Controller
 {
-    public function parse(RowsPostRequest $request): JsonResponse
+    public function parse(RowsPostRequest $request, RowsServices $rowsServices): JsonResponse
     {
-        $spreadsheet = IOFactory::load($request->file('file'));
-        $cell = $spreadsheet->getActiveSheet()->getCell('B2');
-
-        return response()->json(["working" => $cell->getValue()]);
+        return response()->json(["task_id" => $rowsServices->dispatchParsing($request->file("file"))]);
     }
 }
