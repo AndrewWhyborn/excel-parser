@@ -56,9 +56,7 @@ class RowsServices
             $formattedRows[] = [
                 "id" => $rows[$i][0],
                 "name" => $rows[$i][1],
-                "date" => Date::excelToDateTimeObject($rows[$i][2])->format("Y-m-d"),
-                "created_at" => now(),
-                "updated_at" => now(),
+                "date" => Date::excelToDateTimeObject($rows[$i][2])->format("Y-m-d")
             ];
         }
 
