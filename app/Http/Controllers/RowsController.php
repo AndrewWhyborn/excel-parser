@@ -19,6 +19,8 @@ class RowsController extends Controller
      */
     public function parse(RowsPostRequest $request, RowsServices $rowsServices): JsonResponse
     {
-        return response()->json(["task_id" => $rowsServices->dispatchParsing($request->file("file"))]);
+        $task_id = $rowsServices->dispatchParsing($request->file("file"));
+
+        return response()->json(compact(["task_id"]));
     }
 }

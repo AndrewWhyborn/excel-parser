@@ -3,12 +3,14 @@
 namespace App\Jobs;
 
 use App\Models\Row;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Redis;
 
 class ParseChunk implements ShouldQueue
 {
@@ -37,6 +39,9 @@ class ParseChunk implements ShouldQueue
     {
         try {
             Row::insert($this->rows);
+
+            Redis::incrby($this->uid, count($this->rows));
+
             echo "Inserted " . count($this->rows) . " rows [{$this->uid}]" . PHP_EOL;
 
             /* FAKE TIMEOUT */
@@ -44,7 +49,7 @@ class ParseChunk implements ShouldQueue
             /* FAKE TIMEOUT */
 
             return Command::SUCCESS;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             echo "Error happened: " . $exception->getMessage() . PHP_EOL;
 
             return Command::FAILURE;

@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Jobs\ParseChunk;
 use App\Models\Row;
+use Illuminate\Support\Facades\Redis;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
@@ -20,6 +21,7 @@ class RowsServices
         $formattedRows = $this->formatRows($dataRows);
 
         $uid = uniqid();
+        Redis::set($uid, 0);
 
         Row::truncate();
         foreach (array_chunk($formattedRows, 1000) as $rowsChunk)
